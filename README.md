@@ -1,44 +1,74 @@
+
 # StandIn — Frontend
 
 > Your AI-powered stand-in for meetings you can't miss.
 
-StandIn lets you set up an AI avatar with your context and update before a meeting. The avatar answers questions on your behalf in real time, then generates a full summary when the meeting ends.
+StandIn is a prototype meeting assistant built during a hackathon.
+It allows users to create an AI-powered stand-in that can answer basic meeting questions on their behalf when they are unavailable or busy.
+
+This frontend connects to an OpenAI-compatible backend and supports live meeting interaction, AI-generated responses, optional audio playback, and automatic meeting summaries.
 
 ---
 
-## What It Does
+# Project Status
 
-- **Setup Screen** — Enter your meeting title, role, update, and any extra context before the meeting starts
-- **Meeting Room** — Participants type questions live; the AI responds as you, with optional audio via Beyond Presence
-- **Summary Screen** — When the meeting ends, see duration, questions answered, key points, topics, and the full transcript
-
----
-
-## Tech Stack
-
-| Tool | Purpose |
-|---|---|
-| React (Vite) | UI framework |
-| Tailwind CSS v3 | Styling |
-| Axios | HTTP requests to backend |
-| Netlify | Hosting |
+* Prototype stage
+* Frontend meeting flow functional in concept
+* OpenAI-compatible API integration added
+* Some features are experimental or incomplete
+* Additional fixes and improvements planned
 
 ---
 
-## Project Structure
+# Features
 
-```
+* **Setup Screen**
+
+  * Enter meeting title
+  * Add role/context
+  * Provide personal updates
+  * Add custom instructions for AI behavior
+
+* **Meeting Room**
+
+  * Ask questions in real time
+  * AI responds as the user
+  * Optional audio playback using Beyond Presence
+
+* **Summary Screen**
+
+  * Meeting duration
+  * Key discussion points
+  * Topics covered
+  * Full transcript review
+
+---
+
+# Tech Stack
+
+| Tool            | Purpose             |
+| --------------- | ------------------- |
+| React (Vite)    | Frontend framework  |
+| Tailwind CSS v3 | Styling             |
+| Axios           | API communication   |
+| Netlify         | Frontend deployment |
+
+---
+
+# Project Structure
+
+```bash
 standin-frontend/
 ├── src/
 │   ├── components/
-│   │   ├── SetupForm.jsx        # Pre-meeting form screen
-│   │   ├── MeetingRoom.jsx      # Live meeting screen
-│   │   ├── Summary.jsx          # Post-meeting summary screen
-│   │   ├── AvatarBubble.jsx     # AI response card with audio
-│   │   └── TranscriptBubble.jsx # Question/answer chat bubbles
-│   ├── App.jsx                  # Screen router (setup → meeting → summary)
-│   ├── main.jsx                 # React entry point
-│   └── index.css                # Tailwind directives
+│   │   ├── SetupForm.jsx
+│   │   ├── MeetingRoom.jsx
+│   │   ├── Summary.jsx
+│   │   ├── AvatarBubble.jsx
+│   │   └── TranscriptBubble.jsx
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
 ├── index.html
 ├── tailwind.config.js
 ├── postcss.config.js
@@ -48,53 +78,89 @@ standin-frontend/
 
 ---
 
-## Getting Started
+# OpenAI-Compatible API Setup
 
-### Prerequisites
+This project now uses an OpenAI-compatible Chat Completions API.
 
-- Node.js v18 or higher — [nodejs.org](https://nodejs.org)
-- The StandIn backend running on port 3001 — see the backend repo
+Create a `.env` file in your backend project:
 
-### Install and Run
+```env
+API_BASE_URL=https://api.openai.com/v1
+API_KEY=your_api_key_here
+MODEL_NAME=gpt-4o-mini
+```
+
+You may also use another OpenAI-compatible provider by changing:
+
+* `API_BASE_URL`
+* `API_KEY`
+* `MODEL_NAME`
+
+while keeping the same request structure.
+
+---
+
+# Getting Started
+
+## Prerequisites
+
+* Node.js v18+
+* Backend server running locally
+* API key configured
+
+---
+
+## Installation
 
 ```bash
-# Clone the repo
+# Clone repository
 git clone https://github.com/YOURUSERNAME/standin-frontend.git
+
+# Open project
 cd standin-frontend
 
 # Install dependencies
 npm install
 
-# Start the dev server
+# Start development server
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Open:
 
-> Make sure the backend is running at `http://localhost:3001` before testing — otherwise API calls will fail.
-
----
-
-## Backend API
-
-This frontend talks to three endpoints on the StandIn backend:
-
-| Method | Endpoint | What It Does |
-|---|---|---|
-| `POST` | `/api/setup` | Saves meeting context before the meeting |
-| `POST` | `/api/ask` | Sends a question, gets AI text + audio URL back |
-| `GET` | `/api/summary` | Returns duration, key points, and full transcript |
-
-In development the backend URL is `http://localhost:3001`.
-In production it is your Railway URL (see Deployment below).
+```bash
+http://localhost:5173
+```
 
 ---
 
-## Common Issues
+# Backend Connection
 
-**Tailwind not working / `npx tailwindcss init -p` fails**
+This frontend communicates with the backend API.
 
-This happens if Tailwind v4 got installed instead of v3. Fix it:
+Default local backend:
+
+```bash
+http://localhost:3001
+```
+
+---
+
+# API Endpoints
+
+| Method | Endpoint       | Purpose                                 |
+| ------ | -------------- | --------------------------------------- |
+| `POST` | `/api/setup`   | Save meeting/user context               |
+| `POST` | `/api/ask`     | Send question and receive AI response   |
+| `GET`  | `/api/summary` | Retrieve meeting summary and transcript |
+
+---
+
+# Common Issues
+
+## Tailwind CSS Not Working
+
+If Tailwind v4 installs accidentally:
 
 ```bash
 npm uninstall tailwindcss
@@ -102,54 +168,110 @@ npm install -D tailwindcss@3 postcss autoprefixer
 npx tailwindcss init -p
 ```
 
-**API calls failing in the browser**
+---
 
-Make sure the backend is running. Open a second terminal, navigate to the backend folder, and run `npm run dev`. You should see `StandIn backend running on port 3001`.
+## API Calls Failing
 
-**Changes not showing up**
+Make sure:
 
-Vite hot-reloads automatically. If it stops, press `Ctrl+C` in the terminal and run `npm run dev` again.
+* Backend server is running
+* `.env` values are correct
+* API key is valid
 
 ---
 
-## Deployment
+## Hot Reload Stops Working
 
-### Deploy to Netlify
+Restart Vite:
 
-1. Push your code to GitHub
-2. Go to [netlify.com](https://netlify.com) and sign in with GitHub
-3. Click **Add New Site → Import an Existing Project**
-4. Select `standin-frontend`
-5. Set these build settings:
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-6. Click **Deploy Site**
-
-### Switch to Production Backend
-
-Once your backend is deployed on Railway, do a global find and replace in Cursor:
-
-- Press `Ctrl+Shift+H` (Windows) or `Cmd+Shift+H` (Mac)
-- Find: `http://localhost:3001`
-- Replace with: `https://your-backend-name.railway.app`
-
-Then push to GitHub — Netlify redeploys automatically.
+```bash
+Ctrl + C
+npm run dev
+```
 
 ---
 
-## Submission Checklist
+# Deployment
 
-- [ ] Frontend live on Netlify
-- [ ] All three screens working (Setup → Meeting Room → Summary)
-- [ ] Frontend pointing to Railway URL, not localhost
-- [ ] GitHub repo with all code pushed
-- [ ] Demo video recorded
-- [ ] Project overview document filled in
+## Deploy Frontend to Netlify
 
-**Submit by 9:45am on May 17th. Do not wait until 10am.**
+1. Push project to GitHub
+2. Open [Netlify](https://www.netlify.com?utm_source=chatgpt.com)
+3. Import repository
+4. Configure:
+
+   * Build command:
+
+     ```bash
+     npm run build
+     ```
+   * Publish directory:
+
+     ```bash
+     dist
+     ```
+5. Deploy
 
 ---
 
-## Related Repos
+# Production Backend Setup
 
-- [standin-backend](https://github.com/YOURUSERNAME/standin-backend) — Express backend with Gemini AI and Beyond Presence integration
+After deploying backend services:
+
+Replace:
+
+```bash
+http://localhost:3001
+```
+
+with your production backend URL.
+
+Example:
+
+```bash
+https://your-backend-name.railway.app
+```
+
+---
+
+# Hackathon Context
+
+This project was prepared for the CursorSriLanka 24h Buildathon held on **16–17 May 2026**.
+
+Due to hackathon time constraints, some features are still experimental and may contain bugs.
+
+---
+
+# Acknowledgements
+
+Special thanks to **Team Nexa** for:
+
+* Project planning
+* Research and idea development
+* Collaboration during the hackathon
+* Testing and rapid prototyping
+
+Huge appreciation to all contributors and team members who helped make this prototype possible 🚀
+
+---
+
+# Related Projects
+
+* Backend API server
+* Beyond Presence voice integration
+* AI meeting summary system
+* Real-time transcript handling
+
+---
+
+# Future Improvements
+
+* Real-time voice conversation
+* Better memory/context handling
+* Multi-user meeting rooms
+* Improved AI response accuracy
+* Authentication system
+* Persistent meeting history
+* Better UI/UX polish
+
+---
